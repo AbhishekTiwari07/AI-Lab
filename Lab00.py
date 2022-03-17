@@ -3,6 +3,8 @@ final_state = ["C","C","C","_","R","R","R"]
 state = initial_state
 que = []
 
+global_count = 0
+
 def jump(i, j):
     state[i], state[j] = state[j], state[i]
     return state
@@ -11,11 +13,18 @@ def print_state(state):
     for x in state:
         print(x, end=' ')
 
+def upcount():
+    global global_count
+    global_count += 1
 
 def dfs():
     flag = 0
+
+    global global_count
+    global_count += 1
+
     if state == final_state:
-        print(state)
+        print('Final State Reached: ', state)
         
     for i in range(7):
         if state[i] == 'R':
@@ -58,12 +67,15 @@ def bfs(state):
     que.append(state)
 
     visited = []
+    count = 0
 
     while que:
         state = que.pop(0)
+        count += 1
 
         if state == final_state:
-            print(state)
+            print('Final State Reached: ', state)
+            return count
 
         if state in visited:
             continue
@@ -96,9 +108,9 @@ def bfs(state):
                     new_state[i] = '_'
                     new_state[i - 2] = 'C'
                     que.append(new_state)
+    return count
 
+dfs()
+print('Solved using DFS after exploring ', global_count, ' Nodes')
 
-# dfs()
-# bfs(state)
-
-
+print('Solved using DFS after exploring ', bfs(state), ' Nodes')

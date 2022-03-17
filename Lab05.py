@@ -1,4 +1,4 @@
-import numpy as numpy
+import numpy as np
 
 class Board:
     def __init__(self, board=None, maxplayer=True):
@@ -113,6 +113,7 @@ class Board:
     def alphabeta(self, depth, maxPlayer):
         self.nodes += 1
         self.maximizingPlayer = maxPlayer
+        # print(self.maximizingPlayer)
         board = self.board
         score = self.evaluation()
         purana_value = None
@@ -143,11 +144,13 @@ class Board:
                     # Best move for max player
                     if board[i][j] == '_':
                         board[i][j] = 'x'
-                        naya_value = max(purana_value, self.minimax(depth + 1, False))
+                        naya_value = max(purana_value, self.alphabeta(depth + 1, False))
 
                         self.alpha = max(self.alpha, naya_value)
+                        # print("A", self.alpha, self.beta)
 
                         if self.beta <= self.alpha:
+                            board[i][j] = '_'
                             flag = True
                             break
 
@@ -156,8 +159,8 @@ class Board:
                             purana_value = naya_value
 
                         board[i][j] = '_'
-                if flag:
-                    break
+                # if flag:
+                #     break
         
         else:
             purana_value = 100000
@@ -167,11 +170,12 @@ class Board:
                     # Best move for min player
                     if board[i][j] == '_':
                         board[i][j] = 'o'
-                        naya_value = min(purana_value, self.minimax(depth + 1, True))
+                        naya_value = min(purana_value, self.alphabeta(depth + 1, True))
 
                         self.beta = min(self.beta, naya_value)
 
                         if self.beta >= self.alpha:
+                            board[i][j] = '_'
                             flag = True
                             break
 
@@ -180,8 +184,9 @@ class Board:
                             purana_value = naya_value
 
                         board[i][j] = '_'
-                if flag:
-                    break
+
+                # if flag:
+                #     break
 
         self.board = bestConfig
 
@@ -189,18 +194,21 @@ class Board:
  
 
 # board = Board([['x', '_', '_'], ['_', 'o', '_'], ['_', 'x', '_']])
-board = Board()
+# board = Board()
+board = Board([['_', 'o', 'o'], ['x', 'x', '_'], ['x', '_', '_']])
 # board = Board([['x', 'o', '_'], ['x', '_', 'o'], ['o', 'x', '_']])
 # board = Board([['x', '_', 'o'], ['_', 'x', '_'], ['_', '_', '_']])
 
 board.print_board()
-board.alphabeta(0, True)
-# board.minimax(0, True)
+
+# board.alphabeta(0, False)
+
+board.minimax(0, False)
 
 print('Win ',board.win)
 print('Lost ',board.lost)
 print('Draw ', board.total_games)
-print('Total ', board.total_games+board.win+board.lost)
+print('Total Games', board.total_games+board.win+board.lost)
 print('Total Nodes ', board.nodes)
-if board.total_games+board.win+board.lost == 255168:
-    print("MINIMAX Badiya Chal rha")
+# if board.total_games+board.win+board.lost == 255168:
+#     print("MINIMAX Badiya Chal rha")
