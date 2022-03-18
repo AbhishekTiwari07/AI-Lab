@@ -11,7 +11,6 @@ data= np.array(gray_img)
 
 def generate_block(data):
     x, y = 75, 75
-    print(x, y)
     img_block = []
 
     for i in range(4):
@@ -55,8 +54,8 @@ ideal_cost = cost_function(mergeImages(d))
 
 d = np.random.permutation(d)
 
-epochs = 2000
-T = 30
+epochs = 1000
+T = 50
 factor = 0.995
 image = d[:]
 
@@ -66,22 +65,43 @@ plt.subplot(1, 3, 2)
 plt.imshow(mergeImages(image), cmap='gray')
 
 purana_cost = cost_function(mergeImages(d))
-print(purana_cost)
+print('Cost of Original Image: ', ideal_cost)
+print('Initial Cost: ', purana_cost)
+
+costs = []
 
 for e in range(epochs):
-    a, b = np.random.randint(0, 16, size=2)
-    d[[a, b],:] = d[[b, a],:]
-    naya_cost = cost_function(mergeImages(d))
-
-    if np.abs(ideal_cost - naya_cost) > np.abs(ideal_cost - purana_cost):
+    costs.append(purana_cost)
+    for t in range(200):
+        a, b = np.random.randint(0, 16, size=2)
         d[[a, b],:] = d[[b, a],:]
 
-    else:
-        image = d[:]
-        purana_cost = naya_cost
+        naya_cost = cost_function(mergeImages(d))
+
+        # if np.abs(ideal_cost - naya_cost) > np.abs(ideal_cost - purana_cost):
+        if naya_cost > purana_cost:
+            val = np.random.uniform()
+            if val < (1 / (1 + np.exp((purana_cost - naya_cost) * (-1) / T))):
+                    purana_cost = naya_cost
+            else:
+                d[[a, b],:] = d[[b, a],:]
+
+        else:
+            image = d[:]
+            purana_cost = naya_cost
+
+    T = T*factor
 
 
-print(purana_cost)
+print('Final Cost: ', purana_cost)
 plt.subplot(1, 3, 3)
 plt.imshow(mergeImages(image), cmap='gray')
+plt.show()
+
+print(np.arange(epochs).shape)
+print(np.array(costs).shape)
+
+plt.plot(np.arange(epochs), costs)
+plt.xlabel('Epochs')
+plt.ylabel('Cost')
 plt.show()
