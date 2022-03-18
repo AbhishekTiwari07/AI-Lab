@@ -31,26 +31,20 @@ def tot_euc_dist(location):
 
 
 # -------------------------------- Random Points ------------------------------------
-x = np.random.uniform(0,100, size= 25)
-y = np.random.uniform(0,100, size= 25)
+# x = np.random.uniform(0,100, size= 25)
+# y = np.random.uniform(0,100, size= 25)
 
 
--------------------------------- Rajasthan Data ------------------------------------
-option = 1
-if (option == 1):
-    file = "xqf131.tsp"
+# -------------------------------- VLSI Data ------------------------------------
+# file = "xqf131.tsp"
 
-elif (option == 2):
-    file = "xqg237.tsp"
+# file = "xqg237.tsp"
 
-elif (option == 3):
-    file = "pma343.tsp"
+# file = "pma343.tsp"
 
-elif (option == 4):
-    file = "pka379.tsp"
+# file = "pka379.tsp"
 
-elif (option == 5):
-    file = "bcl380.tsp"
+file = "bcl380.tsp"
 
 infile = open(file, "r")
 content = infile.readline().strip().split()
@@ -87,13 +81,13 @@ for f, s in zip(location[:-1], location[1:]):
     axes1.plot([f.x, s.x], [f.y, s.y], "b")
     axes1.plot([location[0].x, location[-1].x], [location[0].y, location[-1].y], "b")
 
-epochs = 1000
+epochs = 5000
 T = 50
 factor = 0.995
 
 for i in range(epochs):
     costs.append(purana_cost)
-    for j in range(200):
+    for j in range(500):
         a, b = np.random.randint(0, len(location), size=2)
 
         location[a],location[b] = location[b],location[a]
@@ -121,4 +115,6 @@ plt.show()
 
 
 plt.plot(np.arange(epochs), costs)
+plt.xlabel('Epochs')
+plt.ylabel('Cost')
 plt.show()
