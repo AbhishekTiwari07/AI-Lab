@@ -1,4 +1,4 @@
-# (3,3,1) _____ (0,0,0)
+# (3,3,0) _____ (0,0,1)
 
 Parent = dict()
 
@@ -23,7 +23,7 @@ class env:
             count += 1
             cur_state = stack.pop()
             if self.final_state == cur_state:
-                print("Solved using DFS")
+                print("Solved using DFS ", count)
                 return count
 
             if tuple(cur_state) not in Parent:
@@ -103,10 +103,10 @@ class env:
         
 
 conf = env()
-print('Solved in : ', conf.bfs() - 1, 'steps')
+print('Explored : ', conf.bfs() - 1, 'states')
 
 Parent = {}
-print('Solved in : ', conf.dfs() - 1, 'steps')
+print('Explored : ', conf.dfs() - 1, 'states')
 
 # cur_state = conf.final_state
 # while cur_state != conf.initial_state:
